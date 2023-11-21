@@ -2,10 +2,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
     private List<Item> inventory;
+    private Map<String, User> users;
     protected StoreImpl() throws RemoteException {
         super();
         inventory = new ArrayList<>();
@@ -49,6 +51,11 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
 
     @Override
     public String registerUser(String username, String password) throws RemoteException {
+        if (users.containsKey(username)) {
+            return "Username already exists";
+        }
+
+        users.put(username, new User(username, password));
         return "User registered successfully";
     }
 
