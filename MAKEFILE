@@ -1,0 +1,29 @@
+JAVAC = javac
+JAVA = java
+JAR = jar
+
+SRCDIR = src
+BINDIR = bin
+JARNAME = OnlineStoreApp.jar
+
+.SUFFIXES: .java .class
+
+.java.class:
+	$(JAVAC) -cp $(BINDIR) -d $(BINDIR) $*.java
+
+CLASSES = \
+	$(SRCDIR)/User.java \
+	$(SRCDIR)/Item.java \
+	$(SRCDIR)/ShoppingCart.java \
+	$(SRCDIR)/OnlineStore.java
+
+CLASS_FILES = $(CLASSES:$(SRCDIR)/%.java=$(BINDIR)/%.class)
+
+all: $(CLASS_FILES)
+
+jar: $(CLASS_FILES)
+	$(JAR) cfe $(JARNAME) OnlineStore -C $(BINDIR) .
+
+clean:
+	$(RM) $(BINDIR)/*.class
+	$(RM) $(JARNAME)
