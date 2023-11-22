@@ -43,4 +43,12 @@ public class Item implements Serializable {
     public void setDescription(String newDescription) {
         this.description = newDescription;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
 }

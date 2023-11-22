@@ -67,5 +67,14 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         }
         return null;
     }
+    @Override
+    public String purchaseItems(User user, ShoppingCart cart) throws RemoteException {
+
+        return null;
+    }
+    public void updateItem(String itemId, Item updatedItem) throws RemoteException {
+
+    }
+
 
 }

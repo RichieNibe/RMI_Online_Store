@@ -1,34 +1,31 @@
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ShoppingCart implements Serializable {
-    private Map<Item, Integer> items; 
+    private Map<String, Integer> items;
 
     public ShoppingCart() {
         items = new HashMap<>();
     }
 
-    @Override
-    public String addItem(Item newItem) throws RemoteException {
-        if (newItem == null || items == null) {
-            return "Invalid item or uninitialized inventory";
+
+    public void addItem(String itemId, int quantity) {
+        if (itemId == null || quantity <= 0) {
+            throw new IllegalArgumentException("Invalid item ID or quantity");
         }
 
-        Optional<Item> existingItem = items.size()
-                .filter(item -> item != null && Item.getId().equals(newItem.getId()))
-                .findFirst();
+        items.merge(itemId, quantity, Integer::sum); // Add or update the item's quantity
+    }
 
-        if (existingItem.isPresent()) {
-            Item foundItem = existingItem.get();
-            foundItem.setQuantity(foundItem.getQuantity() + newItem.getQuantity());
-            return "Item quantity updated";
-        } else {
-            items.add(newItem);
-            return "Item added successfully";
+    public void removeItem(String itemId) {
+        if (!items.containsKey(itemId)) {
+            throw new IllegalArgumentException("Item  not found in cart");
         }
+        items.remove(itemId);
+    }
+    public void clearCart() {
+        items.clear();
     }
  
 }
