@@ -1,22 +1,29 @@
-JAVAC=javac
-JAVA=java
-SRC=src
-BIN=bin
-JAR=StoreApp.jar
+JAVAC = javac
+JAVA = java
+SRC_DIR = src
+BIN_DIR = bin
+SERVER_CLASS = StoreServer
+CLIENT_CLASS = StoreClient
+RMI_PORT = 1099
 
-all: compile jar
 
 compile:
-    mkdir -p $(BIN)
-    $(JAVAC) -d $(BIN) $(SRC)/*.java
+    mkdir -p $(BIN_DIR)
+    $(JAVAC) -d $(BIN_DIR) $(SRC_DIR)/*.java
 
-jar:
-    echo Main-Class: your.main.Class > Manifest.txt
-    jar cfm $(JAR) Manifest.txt -C $(BIN) .
-    rm Manifest.txt
+
+run-server:
+    $(JAVA) -cp $(BIN_DIR) $(SERVER_CLASS)
+
+
+run-client:
+    $(JAVA) -cp $(BIN_DIR) $(CLIENT_CLASS)
+
 
 clean:
-    rm -rf $(BIN)/*.class
-    rm -rf $(JAR)
+    rm -rf $(BIN_DIR)/*
 
-.PHONY: compile jar clean
+# Start RMI registry
+start-rmi:
+    rmiregistry $(RMI_PORT)
+
