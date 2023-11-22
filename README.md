@@ -23,6 +23,11 @@ To run this project, you will need:
 ## Compiling the Project
 
 The project comes with a `MAKEFILE` for easy compilation. To compile the project, run:
+
+make compile 
+
+make jar
+
 This command compiles the source files and places the output in the `bin` directory. The `MAKEFILE` is configured to handle various tasks related to building and running the application.
 
 ## Running the Application
@@ -41,8 +46,6 @@ java -jar MyApplication.jar client
 # Start the server on a specific port
 java -jar MyApplication.jar server [port number]
 
-# Connect the client to a specific server and port
-java -jar MyApplication.jar client [server address] [port number]
 
 
 ## Usage
