@@ -6,13 +6,14 @@ SERVER_CLASS = StoreServer
 CLIENT_CLASS = StoreClient
 RMI_PORT = 1099
 JAR_FILE = MyApplication.jar
+MAIN_CLASS = Main
 
 compile:
 	mkdir -p $(BIN_DIR)
 	$(JAVAC) -d $(BIN_DIR) $(JAVA_FILES)
 
 jar: compile
-	jar cvfe $(JAR_FILE) $(SERVER_CLASS) -C $(BIN_DIR) .
+	jar cvfe $(JAR_FILE) $(MAIN_CLASS) -C $(BIN_DIR) .
 
 run-server:
 	$(JAVA) -cp $(BIN_DIR) $(SERVER_CLASS)
