@@ -32,23 +32,12 @@ public class Item implements Serializable {
         this.quantity = quantity;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
-    }
-
-    public void setPrice(double newPrice) {
-        this.price = newPrice;
-    }
-
-    public void setDescription(String newDescription) {
-        this.description = newDescription;
-    }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public double getPrice() {
-        return this.price;
+        return price;
     }
 }

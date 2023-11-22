@@ -1,5 +1,8 @@
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShoppingCart implements Serializable {
@@ -15,7 +18,7 @@ public class ShoppingCart implements Serializable {
             throw new IllegalArgumentException("Invalid item ID or quantity");
         }
 
-        items.merge(itemId, quantity, Integer::sum); // Add or update the item's quantity
+        items.put(itemId, quantity);
     }
 
     public void removeItem(String itemId) {
@@ -27,7 +30,17 @@ public class ShoppingCart implements Serializable {
     public void clearCart() {
         items.clear();
     }
- 
+
+    public void browseItems() {
+        if (items.isEmpty()) {
+            System.out.println("The shopping cart is empty.");
+        } else {
+            System.out.println("Items in the shopping cart:");
+            for (Map.Entry<String, Integer> entry : items.entrySet()) {
+                System.out.println("Item ID: " + entry.getKey() + ", Quantity: " + entry.getValue());
+            }
+        }
+    }
 }
 
 

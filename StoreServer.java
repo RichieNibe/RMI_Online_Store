@@ -4,9 +4,9 @@ import java.rmi.registry.Registry;
 public class StoreServer {
     public static void main(String[] args) {
         try {
-            StoreInterface stub = new StoreImpl();
+            StoreImpl store = new StoreImpl();
             Registry registry = LocateRegistry.createRegistry(1099);
-            registry.bind("Store", stub);
+            registry.bind("Store", store);
             System.out.println("Server started...");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
