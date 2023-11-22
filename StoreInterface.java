@@ -3,7 +3,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface StoreInterface extends Remote {
-    String registerUser(String username, String password) throws RemoteException;
+
 
     String addItem(Item item) throws RemoteException;
 
@@ -11,7 +11,11 @@ public interface StoreInterface extends Remote {
 
     List<Item> browseItems() throws RemoteException;
 
+    String registerUser(String username, String password, boolean isAdmin) throws RemoteException;
 
-    // Other remote methods
+    User loginUser(String username, String password) throws RemoteException;
+
+
+
 }
 

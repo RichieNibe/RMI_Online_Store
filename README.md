@@ -11,6 +11,6 @@
 
 1. Compile the code using the provided MAKEFILE: `make`
 2. Create a JAR file: `make jar`
-3. Execute the code: `java -jar OnlineStoreApp.jar`
+3. Execute the code: `java -jar StoreApp.jar`
 
 Adjust paths and names according to your project structure.

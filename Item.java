@@ -1,4 +1,6 @@
-public class Item {
+import java.io.Serializable;
+public class Item implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static String id;
     private String name;
     private double price;
@@ -7,6 +9,8 @@ public class Item {
     private int quantity;
 
     public Item(String id, String name, double price, String description, int quantity){
+
+
         this.id = id;
         this.name = name;
         this.price = price;
@@ -28,4 +32,15 @@ public class Item {
         this.quantity = quantity;
     }
 
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setPrice(double newPrice) {
+        this.price = newPrice;
+    }
+
+    public void setDescription(String newDescription) {
+        this.description = newDescription;
+    }
 }

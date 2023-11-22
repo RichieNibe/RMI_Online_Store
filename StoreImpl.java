@@ -1,43 +1,44 @@
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
     private List<Item> inventory;
     private Map<String, User> users;
     protected StoreImpl() throws RemoteException {
         super();
+        users = new HashMap<>();
         inventory = new ArrayList<>();
+
 
     }
     @Override
-    public String addItem(Item item) throws RemoteException {
+    public String addItem(Item newItem) throws RemoteException {
+        if (newItem == null || inventory == null) {
+            return "Invalid item or uninitialized inventory";
+        }
 
         Optional<Item> existingItem = inventory.stream()
-                .filter(i -> i.getId().equals(item.getId()))
+                .filter(item -> item != null && item.getId().equals(newItem.getId()))
                 .findFirst();
 
         if (existingItem.isPresent()) {
-
             Item foundItem = existingItem.get();
-            foundItem.setQuantity(foundItem.getQuantity() + item.getQuantity());
+            foundItem.setQuantity(foundItem.getQuantity() + newItem.getQuantity());
             return "Item quantity updated";
         } else {
-
-            inventory.add(item);
-
-        return "Item added successfully";
+            inventory.add(newItem);
+            return "Item added successfully";
         }
     }
 
     @Override
     public String removeItem(String itemId) throws RemoteException {
-        for (Item item : inventory) {
-            if (Item.getId().equals(itemId)) {
-                inventory.remove(item);
+        Iterator<Item> iterator = inventory.iterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (item.getId().equals(itemId)) {
+                iterator.remove();
                 return "Item removed successfully";
             }
         }
@@ -50,13 +51,21 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
     }
 
     @Override
-    public String registerUser(String username, String password) throws RemoteException {
+    public String registerUser(String username, String password, boolean isAdmin) throws RemoteException {
         if (users.containsKey(username)) {
             return "Username already exists";
         }
 
-        users.put(username, new User(username, password));
+
+        users.put(username, new User(username, password, isAdmin));
         return "User registered successfully";
+    }
+    public User loginUser(String username, String password) {
+        User user = users.get(username);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
     }
 
 }

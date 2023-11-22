@@ -1,29 +1,22 @@
-JAVAC = javac
-JAVA = java
-JAR = jar
+JAVAC=javac
+JAVA=java
+SRC=src
+BIN=bin
+JAR=StoreApp.jar
 
-SRCDIR = src
-BINDIR = bin
-JARNAME = OnlineStoreApp.jar
+all: compile jar
 
-.SUFFIXES: .java .class
+compile:
+    mkdir -p $(BIN)
+    $(JAVAC) -d $(BIN) $(SRC)/*.java
 
-.java.class:
-	$(JAVAC) -cp $(BINDIR) -d $(BINDIR) $*.java
-
-CLASSES = \
-	$(SRCDIR)/User.java \
-	$(SRCDIR)/Item.java \
-	$(SRCDIR)/ShoppingCart.java \
-	$(SRCDIR)/OnlineStore.java
-
-CLASS_FILES = $(CLASSES:$(SRCDIR)/%.java=$(BINDIR)/%.class)
-
-all: $(CLASS_FILES)
-
-jar: $(CLASS_FILES)
-	$(JAR) cfe $(JARNAME) OnlineStore -C $(BINDIR) .
+jar:
+    echo Main-Class: your.main.Class > Manifest.txt
+    jar cfm $(JAR) Manifest.txt -C $(BIN) .
+    rm Manifest.txt
 
 clean:
-	$(RM) $(BINDIR)/*.class
-	$(RM) $(JARNAME)
+    rm -rf $(BIN)/*.class
+    rm -rf $(JAR)
+
+.PHONY: compile jar clean

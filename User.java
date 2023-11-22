@@ -1,11 +1,15 @@
 public class User {
     private String username;
     private String password;
+    private boolean isAdmin;
 
-    public User(String username, String password) {
+    public User(String username, String password, boolean isAdmin) {
+
         this.username = username;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
+
 
 
     public String getUsername() {
@@ -22,5 +26,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }
