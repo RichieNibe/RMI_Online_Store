@@ -25,18 +25,25 @@ To run this project, you will need:
 The project comes with a `MAKEFILE` for easy compilation. To compile the project, run:
 This command compiles the source files and places the output in the `bin` directory. The `MAKEFILE` is configured to handle various tasks related to building and running the application.
 
-### Available Commands
+## Running the Application
+The application can be run in two modes: Server and Client. Use the following commands to start each component:
 
-- `make compile`: Compiles the source files and stores the compiled classes in the `bin` directory.
-- `make run-server`: Starts the server component of the RMI application. Make sure to run this before starting the client.
-- `make run-client`: Launches the client component, allowing interaction with the server through RMI.
-- `make start-rmi`: Starts the RMI registry service on the default port (1099). This service is required for the RMI server and client to communicate.
-- `make clean`: Cleans up the compiled files from the `bin` directory, effectively resetting the compilation output.
+**Run the Server**
+
+java -jar MyApplication.jar server
+
+**Run the Client**
+
+open a new terminal and run 
+
+java -jar MyApplication.jar client
+
+# Start the server on a specific port
+java -jar MyApplication.jar server [port number]
+
+# Connect the client to a specific server and port
+java -jar MyApplication.jar client [server address] [port number]
+
 
 ## Usage
-
 Once the server is running, you can interact with the store using the client application. Follow the prompts in the client's terminal to register, login, and perform other actions.
-
-
-
-Adjust paths and names according to your project structure.
