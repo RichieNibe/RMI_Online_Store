@@ -12,6 +12,7 @@ This project is a Java application using Remote Method Invocation (RMI) to creat
 - Updating items in inventory
 - Removing items
 - Admin functionality for managing inventory
+- Purchasing items
 
 ## Prerequisites
 
