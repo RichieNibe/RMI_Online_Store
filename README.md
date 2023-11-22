@@ -10,6 +10,7 @@ This project is a Java application using Remote Method Invocation (RMI) to creat
 - Browsing items in the store
 - Adding items to a shopping cart
 - Updating items in inventory
+- Removing items
 - Admin functionality for managing inventory
 
 ## Prerequisites
