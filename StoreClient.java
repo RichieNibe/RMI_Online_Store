@@ -34,33 +34,39 @@ public class StoreClient {
         }
     }
 
-    public void loginUser(Scanner scanner) {
-        try  {
+    public String loginUser(Scanner scanner) {
+        try {
             System.out.println("Enter username:");
             String username = scanner.nextLine();
             System.out.println("Enter password:");
-            int password = Integer.parseInt(scanner.nextLine());
-            System.out.println("Are you an Admin (true/false):");
-            boolean Admin = scanner.nextBoolean();
+            String password = scanner.nextLine();
 
 
-            String response = storeStub.loginUser(username, String.valueOf(password), Admin);
+            String response = storeStub.loginUser(username, password);
             System.out.println(response);
-            if (response.equals("Login successful")) {
+
+            if (response.equals("Admin login successful")) {
                 currentUser = username;
+                return "admin";
+            } else if (response.equals("Customer login successful")) {
+                currentUser = username;
+                return "customer";
+            } else {
+                return "unauthorized";
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
+            return "unauthorized";
         }
     }
 
-    public void addToCart() {
+    public void addToCart(Scanner scanner) {
         if (currentUser == null) {
             System.out.println("Please login first.");
             return;
         }
 
-        try (Scanner scanner = new Scanner(System.in)) {
+        try  {
             System.out.println("Enter Item ID:");
             String itemId = scanner.nextLine();
             System.out.println("Enter quantity:");
@@ -77,6 +83,66 @@ public class StoreClient {
     public void displayCart() {
         currentCart.browseItems();
     }
+    public void adminMenu(Scanner scanner) {
+        boolean running = true;
+        while (running) {
+            System.out.println("Admin Menu:");
+            System.out.println("1. Manage Inventory");
+            System.out.println("2. View Reports");
+            System.out.println("3. Logout");
+
+            System.out.print("Choose an option: ");
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1:
+
+                    System.out.println("Managing Inventory...");
+                    break;
+                case 2:
+
+                    System.out.println("Viewing Reports...");
+                    break;
+                case 3:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+    public void customerMenu(Scanner scanner) {
+        boolean running = true;
+        while (running) {
+            System.out.println("Customer Menu:");
+            System.out.println("1. Browse Items");
+            System.out.println("2. Add to Cart");
+            System.out.println("3. View Cart");
+            System.out.println("4. Logout");
+
+            System.out.print("Choose an option: ");
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1:
+
+                    System.out.println("Browsing Items...");
+                    break;
+                case 2:
+                    addToCart(scanner);
+                    break;
+                case 3:
+                    displayCart();
+                    break;
+                case 4:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         StoreClient client = new StoreClient();
@@ -86,10 +152,7 @@ public class StoreClient {
         while (isRunning) {
             System.out.println("1. Register");
             System.out.println("2. Login");
-            System.out.println("3. List Inventory");
-            System.out.println("4. Add to Cart");
-            System.out.println("5. Display Cart");
-            System.out.println("6. Exit");
+            System.out.println("3. Exit");
             System.out.println("Choose an option:");
 
             int choice = -1;
@@ -106,21 +169,21 @@ public class StoreClient {
 
 
             switch (choice) {
+
                 case 1:
                     client.registerUser( scanner);
                     break;
                 case 2:
-                    client.loginUser( scanner);
+                    String userRole = client.loginUser(scanner);
+                    if (userRole.equals("admin")) {
+                        client.adminMenu(scanner);
+                    } else if (userRole.equals("customer")) {
+                        client.customerMenu(scanner);
+                    } else {
+                        System.out.println("Unauthorized access or login failed.");
+                    }
                     break;
-                case 3:
-                    client.addToCart();
-                    break;
-                case 4:
-                    client.displayCart();
-                    break;
-                case 5:
-                    isRunning = false;
-                    break;
+
                 default:
                     System.out.println("Invalid option. Please try again.");
             }

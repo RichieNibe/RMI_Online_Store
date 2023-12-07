@@ -96,13 +96,7 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         users.put(username, new User(username, password, isAdmin));
         return "User registered successfully";
     }
-    public User loginUser(String username, String password) {
-        User user = users.get(username);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        }
-        return null;
-    }
+
     @Override
     public String purchaseItems(User user, ShoppingCart cart) throws RemoteException {
 
@@ -133,15 +127,15 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         return null;
     }
     @Override
-    public String loginUser(String username, String password, boolean isAdmin) throws RemoteException {
+    public String loginUser(String username, String password) throws RemoteException {
         User user = users.get(username);
         if (user != null && user.getPassword().equals(password)) {
 
             boolean isUserAdmin = user.isAdmin();
-            if (isAdmin && isUserAdmin || !isAdmin && !isUserAdmin) {
-                return "Login successful";
+            if (isUserAdmin ) {
+                return "Admin login successful";
             } else {
-                return "Access denied: Role mismatch";
+                return "Customer login successful";
             }
         }
         return "Invalid username or password";

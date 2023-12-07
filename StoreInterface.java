@@ -15,7 +15,7 @@ public interface StoreInterface extends Remote {
 
     String registerUser(String username, String password, boolean isAdmin) throws RemoteException;
 
-    String loginUser(String username, String password, boolean isAdmin) throws RemoteException;
+    String loginUser(String username, String password) throws RemoteException;
     void updateItem(String itemId, Item updatedItem) throws RemoteException;
     String purchaseItems(User user, ShoppingCart cart) throws RemoteException;
 
