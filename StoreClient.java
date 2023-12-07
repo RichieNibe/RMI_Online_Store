@@ -18,28 +18,30 @@ public class StoreClient {
         }
     }
 
-    public void registerUser() {
-        try (Scanner scanner = new Scanner(System.in)) {
+    public void registerUser(Scanner scanner) {
+        try  {
             System.out.println("Enter username:");
             String username = scanner.nextLine();
             System.out.println("Enter password:");
             String password = scanner.nextLine();
+            System.out.println("Are you an Admin true/false (response is case sensitive):");
+            boolean admin = scanner.nextBoolean();
 
-            String response = storeStub.registerUser(username, password, true);
+            String response = storeStub.registerUser(username, password, admin);
             System.out.println(response);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
     }
 
-    public void loginUser() {
-        try (Scanner scanner = new Scanner(System.in)) {
+    public void loginUser(Scanner scanner) {
+        try  {
             System.out.println("Enter username:");
             String username = scanner.nextLine();
             System.out.println("Enter password:");
             int password = Integer.parseInt(scanner.nextLine());
-            System.out.println("Are you an Admin:");
-            boolean Admin = Boolean.parseBoolean(scanner.nextLine());
+            System.out.println("Are you an Admin (true/false):");
+            boolean Admin = scanner.nextBoolean();
 
 
             String response = storeStub.loginUser(username, String.valueOf(password), Admin);
@@ -79,13 +81,15 @@ public class StoreClient {
     public static void main(String[] args) {
         StoreClient client = new StoreClient();
         Scanner scanner = new Scanner(System.in);
+        boolean isRunning = true;
 
-        while (true) {
+        while (isRunning) {
             System.out.println("1. Register");
             System.out.println("2. Login");
-            System.out.println("3. Add to Cart");
-            System.out.println("4. Display Cart");
-            System.out.println("5. Exit");
+            System.out.println("3. List Inventory");
+            System.out.println("4. Add to Cart");
+            System.out.println("5. Display Cart");
+            System.out.println("6. Exit");
             System.out.println("Choose an option:");
 
             int choice = -1;
@@ -93,23 +97,20 @@ public class StoreClient {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } else {
-                if (scanner.hasNext()) {
+
                     scanner.nextLine();
                     System.out.println("Invalid input. Please enter a number.");
                     continue;
-                } else {
-                    System.out.println("No input provided. Exiting.");
-                    break;
-                }
             }
+
 
 
             switch (choice) {
                 case 1:
-                    client.registerUser();
+                    client.registerUser( scanner);
                     break;
                 case 2:
-                    client.loginUser();
+                    client.loginUser( scanner);
                     break;
                 case 3:
                     client.addToCart();
@@ -118,8 +119,8 @@ public class StoreClient {
                     client.displayCart();
                     break;
                 case 5:
-                    scanner.close();
-                    return;
+                    isRunning = false;
+                    break;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
