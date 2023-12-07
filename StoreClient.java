@@ -14,6 +14,7 @@ public class StoreClient {
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             storeStub = (StoreInterface) registry.lookup("Store");
+            storeStub.registerUser("Richard","123",true);
             currentCart = new ShoppingCart();
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
@@ -27,10 +28,9 @@ public class StoreClient {
             String username = scanner.nextLine();
             System.out.println("Enter password:");
             String password = scanner.nextLine();
-            System.out.println("Are you an Admin true/false (response is case sensitive):");
-            boolean admin = scanner.nextBoolean();
 
-            String response = storeStub.registerUser(username, password, admin);
+
+            String response = storeStub.registerUser(username, password, false);
             System.out.println(response);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -89,8 +89,17 @@ public class StoreClient {
 
     public void displayInventory() throws RemoteException {
         List<Item> inventory = storeStub.browseStorage();
-
+        if (inventory.isEmpty()) {
+            System.out.println("The inventory is empty.");
+        } else {
+            for (Item item : inventory) {
+                System.out.println("Item ID: " + item.getId() + ", Name: " + item.getName()
+                        + ", Price: " + item.getPrice() + ", Description: "
+                        + item.getDescription() + ", Quantity: " + item.getQuantity());
+            }
+        }
     }
+
     public void updateItem(Scanner scanner) throws RemoteException {
         System.out.println("Enter Item ID to update:");
         String itemId = scanner.nextLine();

@@ -90,6 +90,7 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
 
     }
 
+
     @Override
     public String removeItem(String itemId) throws RemoteException {
         Iterator<Item> iterator = inventory.iterator();
