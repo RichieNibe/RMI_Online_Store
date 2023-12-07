@@ -130,14 +130,9 @@ public class StoreClient {
         int choice = Integer.parseInt(scanner.nextLine());
 
         switch (choice) {
-            case 1:
-                addUser(scanner);
-                break;
-            case 2:
-                removeUser(scanner);
-                break;
-            default:
-                System.out.println("Invalid option. Please try again.");
+            case 1 -> addUser(scanner);
+            case 2 -> removeUser(scanner);
+            default -> System.out.println("Invalid option. Please try again.");
         }
     }
 
@@ -175,26 +170,20 @@ public class StoreClient {
 
 
             System.out.print("Choose an option: ");
-            String input = scanner.nextLine();
-
-
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
+            }
 
             switch (choice) {
-                case 1:
-                    displayInventory();
-                    break;
-                case 2:
-                    updateItem(scanner);
-                    break;
-                case 3:
-                    manageUsers(scanner);
-                    break;
-                case 4:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                case 1 -> displayInventory();
+                case 2 -> updateItem(scanner);
+                case 3 -> manageUsers(scanner);
+                case 4 -> running = false;
+                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
@@ -212,24 +201,15 @@ public class StoreClient {
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     System.out.println("Browsing Items");
                     displayInventory();
-                    break;
-                case 2:
-                    addToCart(scanner);
-                    break;
-                case 3:
-                    displayCart();
-                    break;
-                case 4:
-                    purchaseItems();
-                    break;
-                case 5:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                }
+                case 2 -> addToCart(scanner);
+                case 3 -> displayCart();
+                case 4 -> purchaseItems();
+                case 5 -> running = false;
+                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
@@ -258,13 +238,9 @@ public class StoreClient {
             }
 
 
-
             switch (choice) {
-
-                case 1:
-                    client.registerUser( scanner);
-                    break;
-                case 2:
+                case 1 -> client.registerUser(scanner);
+                case 2 -> {
                     String userRole = client.loginUser(scanner);
                     if (userRole.equals("admin")) {
                         client.adminMenu(scanner);
@@ -273,10 +249,8 @@ public class StoreClient {
                     } else {
                         System.out.println("Unauthorized access or login failed.");
                     }
-                    break;
-
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                }
+                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }

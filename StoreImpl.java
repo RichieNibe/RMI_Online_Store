@@ -38,25 +38,7 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         return "Item not found";
     }
 
-    @Override
-    public String addItem(Item newItem) throws RemoteException {
-        if (newItem == null || inventory == null) {
-            return "Invalid item or uninitialized inventory";
-        }
 
-        Optional<Item> existingItem = inventory.stream()
-                .filter(item -> item != null && item.getId().equals(newItem.getId()))
-                .findFirst();
-
-        if (existingItem.isPresent()) {
-            Item foundItem = existingItem.get();
-            foundItem.setQuantity(foundItem.getQuantity() + newItem.getQuantity());
-            return "Item quantity updated";
-        } else {
-            inventory.add(newItem);
-            return "Item added successfully";
-        }
-    }
     @Override
     public String updateItemDetails(String itemId, String newDescription, double newPrice, int newQuantity) throws RemoteException {
         if (itemId == null || itemId.trim().isEmpty()) {
@@ -89,18 +71,7 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
     }
 
 
-    @Override
-    public String removeItem(String itemId) throws RemoteException {
-        Iterator<Item> iterator = inventory.iterator();
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
-            if (item.getId().equals(itemId)) {
-                iterator.remove();
-                return "Item removed successfully";
-            }
-        }
-        return "Item not found";
-    }
+
     @Override
     public List<String> checkCart(String username) throws RemoteException {
         ShoppingCart cart = userCarts.get(username);
@@ -124,15 +95,7 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         users.put(username, new User(username, password, isAdmin));
         return "User registered successfully";
     }
-    @Override
-    public Item getItem(String itemId) throws RemoteException {
-        for (Item item : inventory) {
-            if (item.getId().equals(itemId)) {
-                return item;
-            }
-        }
-        return null;
-    }
+
     @Override
     public String purchaseItems(String username) throws RemoteException {
         ShoppingCart cart = userCarts.get(username);

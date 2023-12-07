@@ -9,7 +9,7 @@ public class StoreServer {
             registry.bind("Store", store);
             System.out.println("Server started...");
         } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
+            System.err.println("Server exception: " + e);
             e.printStackTrace();
         }
     }

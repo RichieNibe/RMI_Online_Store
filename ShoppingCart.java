@@ -19,13 +19,6 @@ public class ShoppingCart implements Serializable {
         items.put(item, items.getOrDefault(item, 0) + quantity);
     }
 
-
-    public void removeItem(String itemId) {
-        if (!items.containsKey(itemId)) {
-            throw new IllegalArgumentException("Item  not found in cart");
-        }
-        items.remove(itemId);
-    }
     public void clearCart() {
         items.clear();
     }
