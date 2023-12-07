@@ -53,4 +53,4 @@ Once the server is running, you can interact with the store using the client app
 You must first register before logging in 
 
 # Admin
-There Admin Username is Richard and the password is 123
+There Admin Username is Richard and the Password is 123
