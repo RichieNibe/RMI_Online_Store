@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class StoreClient {
     private StoreInterface storeStub;
-    private ShoppingCart currentCart;
+
 
     private String currentUser;
 
@@ -15,7 +15,7 @@ public class StoreClient {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             storeStub = (StoreInterface) registry.lookup("Store");
             storeStub.registerUser("Richard","123",true);
-            currentCart = new ShoppingCart();
+
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
@@ -63,29 +63,29 @@ public class StoreClient {
         }
     }
 
-    public void addToCart(Scanner scanner) {
+    public void addToCart(Scanner scanner) throws RemoteException {
         if (currentUser == null) {
             System.out.println("Please login first.");
             return;
         }
 
-        try  {
-            System.out.println("Enter Item ID:");
-            String itemId = scanner.nextLine();
-            System.out.println("Enter quantity:");
-            int quantity = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Item ID:");
+        String itemId = scanner.nextLine();
+        System.out.println("Enter quantity:");
+        int quantity = Integer.parseInt(scanner.nextLine());
 
-            String response = storeStub.addToCart(currentUser, itemId, quantity);
-            System.out.println(response);
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+        String response = storeStub.addToCart(currentUser, itemId, quantity);
+        System.out.println(response);
+    }
+
+
+    public void displayCart() throws RemoteException {
+        List<String> cartContents = storeStub.checkCart(currentUser);
+        for (String content : cartContents) {
+            System.out.println(content);
         }
     }
 
-
-    public void displayCart(){
-        currentCart.browseCart();
-    }
 
     public void displayInventory() throws RemoteException {
         List<Item> inventory = storeStub.browseStorage();
@@ -99,15 +99,24 @@ public class StoreClient {
             }
         }
     }
+    public void purchaseItems() throws RemoteException {
+        if (currentUser == null) {
+            System.out.println("Please login first.");
+            return;
+        }
+
+        String response = storeStub.purchaseItems(currentUser );
+        System.out.println(response);
+    }
 
     public void updateItem(Scanner scanner) throws RemoteException {
         System.out.println("Enter Item ID to update:");
         String itemId = scanner.nextLine();
         System.out.println("Enter new description (press Enter to skip):");
         String newDescription = scanner.nextLine();
-        System.out.println("Enter new price (press Enter to skip):");
+        System.out.println("Enter new price :");
         double newPrice = scanner.nextDouble();
-        System.out.println("Enter new quantity (press Enter to skip):");
+        System.out.println("Enter new quantity :");
         int newQuantity = scanner.nextInt();
 
 
@@ -166,6 +175,9 @@ public class StoreClient {
 
 
             System.out.print("Choose an option: ");
+            String input = scanner.nextLine();
+
+
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
@@ -186,14 +198,15 @@ public class StoreClient {
             }
         }
     }
-    public void customerMenu(Scanner scanner) {
+    public void customerMenu(Scanner scanner) throws RemoteException {
         boolean running = true;
         while (running) {
             System.out.println("Customer Menu:");
             System.out.println("1. Browse Items");
             System.out.println("2. Add to Cart");
             System.out.println("3. View Cart");
-            System.out.println("4. Logout");
+            System.out.println("4. Checkout");
+            System.out.println("5. Logout");
 
             System.out.print("Choose an option: ");
             int choice = Integer.parseInt(scanner.nextLine());
@@ -201,7 +214,7 @@ public class StoreClient {
             switch (choice) {
                 case 1:
                     System.out.println("Browsing Items");
-
+                    displayInventory();
                     break;
                 case 2:
                     addToCart(scanner);
@@ -210,6 +223,9 @@ public class StoreClient {
                     displayCart();
                     break;
                 case 4:
+                    purchaseItems();
+                    break;
+                case 5:
                     running = false;
                     break;
                 default:

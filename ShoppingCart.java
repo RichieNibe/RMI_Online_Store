@@ -12,11 +12,11 @@ public class ShoppingCart implements Serializable {
     }
 
 
-    public void addItem(String itemId, int quantity) {
-        if (itemId == null || quantity <= 0) {
-            throw new IllegalArgumentException("Invalid item ID or quantity");
+    public void addItem(String item, int quantity) {
+        if (item == null || quantity <= 0) {
+            throw new IllegalArgumentException("Invalid item  or quantity");
         }
-        items.put(itemId, items.getOrDefault(itemId, 0) + quantity);
+        items.put(item, items.getOrDefault(item, 0) + quantity);
     }
 
 
@@ -43,6 +43,9 @@ public class ShoppingCart implements Serializable {
         return cartContents;
     }
 
+    public Map<String, Integer> getItems() {
+        return items;
+    }
 }
 
 

@@ -26,17 +26,15 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         ShoppingCart cart = userCarts.getOrDefault(username, new ShoppingCart());
         userCarts.putIfAbsent(username, cart);
 
-        for (Item item : inventory) {
-            if (item.getId().equals(itemId)) {
-                if (item.getQuantity() >= quantity) {
-                    cart.addItem(itemId, quantity);
-                    return "Item added to cart";
-                } else {
-                    return "Insufficient item quantity";
-                }
+        Item item = findItemById(itemId);
+        if (item != null) {
+            if (item.getQuantity() >= quantity) {
+                cart.addItem(itemId, quantity);
+                return "Item added to cart";
+            } else {
+                return "Insufficient item quantity. Available: " + item.getQuantity();
             }
         }
-
         return "Item not found";
     }
 
@@ -126,12 +124,60 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         users.put(username, new User(username, password, isAdmin));
         return "User registered successfully";
     }
-
     @Override
-    public String purchaseItems(User user, ShoppingCart cart) throws RemoteException {
-
+    public Item getItem(String itemId) throws RemoteException {
+        for (Item item : inventory) {
+            if (item.getId().equals(itemId)) {
+                return item;
+            }
+        }
         return null;
     }
+    @Override
+    public String purchaseItems(String username) throws RemoteException {
+        ShoppingCart cart = userCarts.get(username);
+        if (cart == null || cart.getItems().isEmpty()) {
+            return "Your shopping cart is empty.";
+        }
+
+        StringBuilder receipt = new StringBuilder();
+        double totalCost = 0;
+
+        for (Map.Entry<String, Integer> entry : cart.getItems().entrySet()) {
+            String itemId = entry.getKey();
+            int quantityToPurchase = entry.getValue();
+
+            Item item = findItemById(itemId);
+            if (item == null) {
+                receipt.append("Item ID ").append(itemId).append(" not found in inventory.\n");
+                continue;
+            }
+
+            if (item.getQuantity() < quantityToPurchase) {
+                receipt.append("Insufficient quantity for Item ID ").append(itemId)
+                        .append(". Available: ").append(item.getQuantity()).append("\n");
+                continue;
+            }
+
+
+            item.setQuantity(item.getQuantity() - quantityToPurchase);
+
+            double cost = quantityToPurchase * item.getPrice();
+            totalCost += cost;
+
+            receipt.append(quantityToPurchase).append(" x ").append(item.getName())
+                    .append(" @ $").append(item.getPrice()).append(" each. Total: $").append(cost).append("\n");
+        }
+        cart.clearCart();
+
+        if (totalCost == 0) {
+            return "Unable to complete purchase. " + receipt.toString();
+        }
+
+        receipt.append("Total Cost: $").append(totalCost);
+        return "Purchase completed successfully.\n" + receipt.toString();
+    }
+
 
     private Item findItemById(String itemId) {
         for (Item item : inventory) {
