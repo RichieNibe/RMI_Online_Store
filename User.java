@@ -13,10 +13,6 @@ public class User implements Serializable {
         this.isAdmin = isAdmin;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public String getPassword() {
         return password;
     }

@@ -10,8 +10,8 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         super();
         users = new HashMap<>();
         userCarts = new HashMap<>();
-        initializeInventory();
         inventory = new ArrayList<>();
+        initializeInventory();
 
 
 
@@ -59,8 +59,30 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
             return "Item added successfully";
         }
     }
-    private void initializeInventory() {
-        inventory = new ArrayList<>();
+    @Override
+    public String updateItemDetails(String itemId, String newDescription, double newPrice, int newQuantity) throws RemoteException {
+        if (itemId == null || itemId.trim().isEmpty()) {
+            return "Invalid item ID.";
+        }
+
+        for (Item item : inventory) {
+            if (item.getId().equals(itemId)) {
+                if (newDescription != null && !newDescription.trim().isEmpty()) {
+                    item.setDescription(newDescription);
+                }
+                if (newPrice >= 0) {
+                    item.setPrice(newPrice);
+                }
+                if (newQuantity >= 0) {
+                    item.setQuantity(newQuantity);
+                }
+                return "Item updated successfully.";
+            }
+        }
+
+        return "Item not found.";
+    }
+    public void initializeInventory() {
         inventory.add(new Item("item1", "Orange", 20, "Ripe Orange", 1000));
         inventory.add(new Item("item4", "Watermelon", 20, "Fresh watermelon", 1000));
         inventory.add(new Item("1", "Apple", 0.5, "Fresh Apple", 100));
@@ -80,10 +102,17 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
         }
         return "Item not found";
     }
-
     @Override
-    public List<Item> browseItems() throws RemoteException {
-        return new ArrayList<>(inventory);
+    public List<String> checkCart(String username) throws RemoteException {
+        ShoppingCart cart = userCarts.get(username);
+        if (cart == null) {
+            return Collections.singletonList("Cart is empty or user not found.");
+        }
+        return cart.browseCart();
+    }
+    @Override
+    public List<Item> browseStorage() throws RemoteException {
+        return inventory;
     }
 
     @Override
@@ -101,21 +130,6 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
     public String purchaseItems(User user, ShoppingCart cart) throws RemoteException {
 
         return null;
-    }
-    public void updateItem(String itemId, Item updatedItem) throws RemoteException {
-
-    }
-    public String addToCart(ShoppingCart cart, String itemId, int quantity) throws RemoteException {
-        Item item = findItemById(itemId);
-        if (item == null) {
-            return "Item not found";
-        }
-        if (item.getQuantity() < quantity) {
-            return "Not enough stock available";
-        }
-
-        cart.addItem(itemId, quantity);
-        return "Item added to cart";
     }
 
     private Item findItemById(String itemId) {
@@ -139,6 +153,17 @@ public class StoreImpl extends UnicastRemoteObject implements StoreInterface {
             }
         }
         return "Invalid username or password";
+    }
+    @Override
+    public String removeUser(String username) throws RemoteException {
+        if (username == null || username.trim().isEmpty()) {
+            return "Invalid username.";
+        }
+        if (!users.containsKey(username)) {
+            return "User not found.";
+        }
+        users.remove(username);
+        return "User removed successfully.";
     }
 
 }

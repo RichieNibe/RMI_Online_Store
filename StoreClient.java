@@ -1,10 +1,13 @@
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.List;
 import java.util.Scanner;
 
 public class StoreClient {
     private StoreInterface storeStub;
     private ShoppingCart currentCart;
+
     private String currentUser;
 
     public StoreClient() {
@@ -80,30 +83,93 @@ public class StoreClient {
     }
 
 
-    public void displayCart() {
-        currentCart.browseItems();
+    public void displayCart(){
+        currentCart.browseCart();
     }
-    public void adminMenu(Scanner scanner) {
+
+    public void displayInventory() throws RemoteException {
+        List<Item> inventory = storeStub.browseStorage();
+
+    }
+    public void updateItem(Scanner scanner) throws RemoteException {
+        System.out.println("Enter Item ID to update:");
+        String itemId = scanner.nextLine();
+        System.out.println("Enter new description (press Enter to skip):");
+        String newDescription = scanner.nextLine();
+        System.out.println("Enter new price (press Enter to skip):");
+        double newPrice = scanner.nextDouble();
+        System.out.println("Enter new quantity (press Enter to skip):");
+        int newQuantity = scanner.nextInt();
+
+
+        String response = storeStub.updateItemDetails( itemId, newDescription, newPrice, newQuantity);
+        System.out.println(response);
+    }
+    public void manageUsers(Scanner scanner) throws RemoteException {
+        System.out.println("1. Add User");
+        System.out.println("2. Remove User");
+        System.out.print("Choose an option: ");
+        int choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                addUser(scanner);
+                break;
+            case 2:
+                removeUser(scanner);
+                break;
+            default:
+                System.out.println("Invalid option. Please try again.");
+        }
+    }
+
+    public void addUser(Scanner scanner) throws RemoteException {
+        System.out.println("Enter username:");
+        String username = scanner.nextLine();
+        System.out.println("Enter password:");
+        String password = scanner.nextLine();
+        System.out.println("Is Admin? (true/false):");
+        boolean isAdmin = Boolean.parseBoolean(scanner.nextLine());
+
+
+        String response = storeStub.registerUser(username, password, isAdmin);
+        System.out.println(response);
+    }
+
+    public void removeUser(Scanner scanner) throws RemoteException {
+        System.out.println("Enter username to remove:");
+        String username = scanner.nextLine();
+
+
+        String response = storeStub.removeUser(username);
+        System.out.println(response);
+    }
+
+
+    public void adminMenu(Scanner scanner) throws RemoteException {
         boolean running = true;
         while (running) {
             System.out.println("Admin Menu:");
-            System.out.println("1. Manage Inventory");
-            System.out.println("2. View Reports");
-            System.out.println("3. Logout");
+            System.out.println("1. View Inventory");
+            System.out.println("2. Update Item");
+            System.out.println("3. Add/Remove User");
+            System.out.println("4. Logout");
+
 
             System.out.print("Choose an option: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1:
-
-                    System.out.println("Managing Inventory...");
+                    displayInventory();
                     break;
                 case 2:
-
-                    System.out.println("Viewing Reports...");
+                    updateItem(scanner);
                     break;
                 case 3:
+                    manageUsers(scanner);
+                    break;
+                case 4:
                     running = false;
                     break;
                 default:
@@ -125,8 +191,8 @@ public class StoreClient {
 
             switch (choice) {
                 case 1:
+                    System.out.println("Browsing Items");
 
-                    System.out.println("Browsing Items...");
                     break;
                 case 2:
                     addToCart(scanner);
@@ -144,7 +210,7 @@ public class StoreClient {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         StoreClient client = new StoreClient();
         Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;

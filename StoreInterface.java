@@ -1,5 +1,6 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface StoreInterface extends Remote {
@@ -7,19 +8,24 @@ public interface StoreInterface extends Remote {
 
     String addItem(Item item) throws RemoteException;
 
+
     String removeItem(String itemId) throws RemoteException;
 
-    List<Item> browseItems() throws RemoteException;
+    List<String> checkCart(String username) throws RemoteException;
+
+    List<Item>browseStorage() throws RemoteException;
+
 
     String addToCart(String username, String itemId, int quantity) throws RemoteException;
 
     String registerUser(String username, String password, boolean isAdmin) throws RemoteException;
 
     String loginUser(String username, String password) throws RemoteException;
-    void updateItem(String itemId, Item updatedItem) throws RemoteException;
     String purchaseItems(User user, ShoppingCart cart) throws RemoteException;
 
 
+    String updateItemDetails(String itemId, String newDescription, double newPrice, int newQuantity) throws RemoteException;
 
+    String removeUser(String username) throws RemoteException;
 }
 
