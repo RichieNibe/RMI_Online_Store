@@ -52,5 +52,5 @@ java -jar MyApplication.jar server [port number]
 Once the server is running, you can interact with the store using the client application. Follow the prompts in the client's terminal to register, login, and perform other actions.
 You must first register before logging in 
 
-# Admin
-There Admin Username is Richard and the Password is 123
+## Admin
+The Admin Username is Richard and the Password is 123
